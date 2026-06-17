@@ -58,6 +58,7 @@
     .card-body { padding: 32px 28px; background: white; }
     .form-grid { display: flex; flex-wrap: wrap; gap: 20px; }
     .field { flex: 1 1 calc(50% - 20px); min-width: 200px; }
+    .field.full { flex: 1 1 100%; }
     label {
       display: block;
       font-size: 0.7rem;
@@ -100,8 +101,10 @@
     }
     .checkbox-label input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; accent-color: #f3218b; }
     .checkbox-label strong { color: #081135; }
+
+    /* BOTÓN CON ANIMACIÓN DE DESLIZAMIENTO */
     .btn-submit {
-      background: linear-gradient(135deg, #f3218b, #d41a76);
+      background: linear-gradient(135deg, #081135, #1f3a7a);
       border: none;
       width: 100%;
       padding: 16px;
@@ -111,10 +114,33 @@
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 6px 16px rgba(243,33,139,0.25);
       font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(8,17,53,0.25);
     }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(243,33,139,0.35); }
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(95deg, #f3218b, #d41a76);
+      transition: left 0.4s ease;
+      z-index: 0;
+      border-radius: 60px;
+    }
+    .btn-submit:hover::after { left: 0; }
+    .btn-submit span {
+      position: relative;
+      z-index: 1;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(8,17,53,0.35);
+    }
+
     .message {
       margin-top: 20px; padding: 12px 16px; border-radius: 16px;
       text-align: center; font-weight: 500; display: none; font-size: 0.85rem;
@@ -141,14 +167,20 @@
     <div class="card-body">
       <form id="registroUnificado">
         <div class="form-grid">
-          <!-- NUEVO CAMPO: SELECCIÓN DEL SATÉLITE -->
-          <div class="field" style="flex: 1 1 100%;">
+          <!-- CAMPO DE SELECCIÓN CON HORARIOS ACTUALIZADOS -->
+          <div class="field full">
             <label>Selecciona el SATÉLITE al que vas a asistir <span class="required">*</span></label>
             <select id="satelite" required>
               <option value="">-- Elige una opción --</option>
-              <option value="Melanoma Metastásico (BMS) - 25 de junio">Actualización en el manejo de Melanoma Metastásico (BMS) - Un enfoque práctico · 25 de junio</option>
-              <option value="Linfoma refractario o en recaída (Al Pharma) - 26 de junio">Linfoma refractario o en recaída (Al Pharma) · Actualización en manejo · 26 de junio</option>
-              <option value="Cáncer de endometrio recurrente dMMR (GSK) - 26 de junio">La revolución del tratamiento de cáncer de endometrio recurrente dMMR (GSK) · 26 de junio</option>
+              <option value="Melanoma Metastásico (BMS) - 25 junio - 1:00-2:00 p.m.">
+                Actualización en el manejo de Melanoma Metastásico (BMS) · 25 junio · 1:00 - 2:00 p.m.
+              </option>
+              <option value="Linfoma refractario (Al Pharma) - 26 junio - 8:00-9:00 a.m.">
+                Linfoma refractario o en recaída (Al Pharma) · 26 junio · 8:00 - 9:00 a.m.
+              </option>
+              <option value="Endometrio dMMR (GSK) - 26 junio - 12:40 p.m.-2:00 p.m.">
+                La revolución del tratamiento de cáncer de endometrio recurrente dMMR (GSK) · 26 junio · 12:40 p.m. - 2:00 p.m.
+              </option>
             </select>
           </div>
           <!-- RESTO DE CAMPOS -->
@@ -169,7 +201,7 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-submit">INSCRIBIRME AHORA →</button>
+        <button type="submit" class="btn-submit"><span>INSCRIBIRME AHORA →</span></button>
         <div id="messageBox" class="message"></div>
       </form>
     </div>
@@ -200,7 +232,7 @@
       correo: document.getElementById('correo').value,
       institucion: document.getElementById('institucion').value,
       autorizacion: document.getElementById('autorizacion').checked,
-      satelite: document.getElementById('satelite').value  // NUEVO CAMPO
+      satelite: document.getElementById('satelite').value
     };
 
     try {
